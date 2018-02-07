@@ -1,0 +1,13 @@
+[Unit]
+Description=uWSGI instance to serve flask application
+After=network.target
+
+[Service]
+User=
+Group=www-data
+WorkingDirectory=
+Environment=
+ExecStart=
+
+[Install]
+WantedBy=multi-user.target
