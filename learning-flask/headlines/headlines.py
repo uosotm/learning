@@ -15,7 +15,34 @@ RSS_FEEDS = {'hacker_news': 'https://news.ycombinator.com/rss',
              'make': 'https://makezine.com/feed/'}
 # WEATHER_URL = ("http://api.openweathermap.org/data/2.5/weather?q={}\
 #                &units=metric&APPID=%s" % os.environ['OWM_API_KEY'])
+DEFAULTS = {'publication': 'hacker_news',
+            'city': 'London,UK'}
 
+
+@app.route('/')
+def home():
+    publication = request.args.get('publication')
+    if not publication:
+        publication = DEFAULTS['publication']
+    articles = get_news(publication)
+
+    city = request.args.get('city')
+    if not city:
+        city = DEFAULTS['city']
+    weather = get_weather(city)
+    
+    return render_template('home.html',
+                           articles=articles,
+                           weather=weather)
+
+def get_news(query):
+    if not query or query.lower() not in RSS_FEEDS:
+        publication = DEFAULTS["publication"]
+    else:
+        publication = query.lower()
+
+    feed = feedparser.parse(RSS_FEEDS[publication])
+    return feed['entries']
 
 def get_weather(query):
     api_key = os.environ['OWM_API_KEY']
@@ -29,22 +56,9 @@ def get_weather(query):
     if parsed.get("weather"):
         weather = {"description": parsed["weather"][0]["description"],
                    "temperature": parsed["main"]["temp"],
-                   "city": parsed["name"]}
+                   "city": parsed["name"],
+                   'country': parsed['sys']['country']}
     return weather
-
-@app.route("/")
-def get_news(publication='hacker_news'):
-    query = request.args.get('publication')
-    if not query or query.lower() not in RSS_FEEDS:
-        publication = 'hacker_news'
-    else:
-        publication = query.lower()
-
-    feed = feedparser.parse(RSS_FEEDS[publication])
-    weather = get_weather("London,UK")
-    return render_template("home.html",
-                           articles=feed['entries'],
-                           weather=weather)
 
 
 if __name__ == '__main__':
