@@ -13,10 +13,14 @@ app = Flask(__name__)
 RSS_FEEDS = {'hacker_news': 'https://news.ycombinator.com/rss',
              'mozilla': 'https://blog.mozilla.org/feed/',
              'make': 'https://makezine.com/feed/'}
-# WEATHER_URL = ("http://api.openweathermap.org/data/2.5/weather?q={}\
-#                &units=metric&APPID=%s" % os.environ['OWM_API_KEY'])
 DEFAULTS = {'publication': 'hacker_news',
-            'city': 'London,UK'}
+            'city': 'London,UK',
+            'currency_from':'GBP',
+            'currency_to':'USD'}
+WEATHER_API = os.environ['OWM_API_KEY']
+CURRENCY_API = os.environ['OER_API_KEY']
+WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?q={}&units=metric&appid={}"
+CURRENCY_URL = "https://openexchangerates.org//api/latest.json?app_id={}"
 
 
 @app.route('/')
@@ -30,10 +34,21 @@ def home():
     if not city:
         city = DEFAULTS['city']
     weather = get_weather(city)
+
+    currency_from = request.args.get('currency_from')
+    if not currency_from:
+        currency_from = DEFAULTS['currency_from']
+    currency_to = request.args.get('currency_to')
+    if not currency_to:
+        currency_to = DEFAULTS['currency_to']
+    rate = get_rate(currency_from, currency_to)
     
     return render_template('home.html',
                            articles=articles,
-                           weather=weather)
+                           weather=weather,
+                           currency_from=currency_from,
+                           currency_to=currency_to,
+                           rate=rate)
 
 def get_news(query):
     if not query or query.lower() not in RSS_FEEDS:
@@ -45,11 +60,8 @@ def get_news(query):
     return feed['entries']
 
 def get_weather(query):
-    api_key = os.environ['OWM_API_KEY']
-    api_url = "http://api.openweathermap.org/data/2.5/weather?q={}&units=metric&appid={}"
-
     query = urllib.parse.quote(query)
-    url = api_url.format(query, api_key)
+    url = WEATHER_URL.format(query, WEATHER_API)
     data = urllib.request.urlopen(url).read()
     parsed = json.loads(data.decode('utf-8'))
     weather = None
@@ -59,6 +71,15 @@ def get_weather(query):
                    "city": parsed["name"],
                    'country': parsed['sys']['country']}
     return weather
+
+def get_rate(frm, to):
+    url = CURRENCY_URL.format(CURRENCY_API)
+    all_currency = urllib.request.urlopen(url).read()
+
+    parsed = json.loads(all_currency.decode('utf-8')).get('rates')
+    frm_rate = parsed.get(frm.upper())
+    to_rate = parsed.get(to.upper())
+    return to_rate/frm_rate
 
 
 if __name__ == '__main__':
