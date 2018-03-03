@@ -2,6 +2,7 @@ import feedparser
 import json
 import os
 import urllib
+import settings
 
 from flask import Flask
 from flask import render_template
@@ -17,8 +18,10 @@ DEFAULTS = {'publication': 'hacker_news',
             'city': 'London,UK',
             'currency_from':'GBP',
             'currency_to':'USD'}
-WEATHER_API = os.environ['OWM_API_KEY']
-CURRENCY_API = os.environ['OER_API_KEY']
+# WEATHER_API = os.environ['OWM_API_KEY']
+# CURRENCY_API = os.environ['OER_API_KEY']
+WEATHER_API = settings.OWM_API_KEY
+CURRENCY_API = settings.OER_API_KEY
 WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?q={}&units=metric&appid={}"
 CURRENCY_URL = "https://openexchangerates.org//api/latest.json?app_id={}"
 
