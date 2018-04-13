@@ -1,9 +1,17 @@
 <template>
-  <div id="app">
-    <div v-for="message in messages" :key="message.id">
-      <h4>{{ message.title }}</h4>
-      <p>{{ message.text }}</p>
-      <p>{{ message.timestamp }}</p>
+  <div id="app" class="jumbotron">
+    <div class="container">
+      <h1>Hello! Nice to meet you!</h1>
+      <hr />
+      <div class="card-group">
+        <div class="card" v-for="message in messages" :key="message.id">
+          <div class="card-block">
+            <h5 class="card-title">{{ message.title }}</h5>
+            <p class="card-text">{{ message.text }}</p>
+            <p class="card-text">{{ message.timestamp }}</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -30,14 +38,3 @@ export default {
   }
 }
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
