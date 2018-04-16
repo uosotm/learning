@@ -3,12 +3,29 @@
     <div class="container">
       <h1>Hello! Nice to meet you!</h1>
       <hr />
+      <form>
+        <div class="form-group">
+          <input class="form-control"
+                 maxlength="40"
+                 autofocus
+                 placeholder="Please introduce yourself :)" />
+        </div>
+        <div class="form-group">
+          <textarea class="form-control"
+                    placeholder="Leave your message!"
+                    rows="3">
+          </textarea>
+        </div>
+        <button class="btn btn-primary" type="submit">Send</button>
+      </form>
       <div class="card-group">
         <div class="card" v-for="message in messages" :key="message.id">
           <div class="card-block">
             <h5 class="card-title">{{ message.title }}</h5>
             <p class="card-text">{{ message.text }}</p>
-            <p class="card-text">{{ message.timestamp }}</p>
+            <p class="card-text">
+              <small class="text-muted">{{ message.timestamp }}</small>
+            </p>
           </div>
         </div>
       </div>
