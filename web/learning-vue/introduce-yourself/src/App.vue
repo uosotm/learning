@@ -3,7 +3,7 @@
     <div class="container">
       <h1>Hello! Nice to meet you!</h1>
       <hr />
-      <form @submit="addMessage">
+      <form @submit="addMessage" class="mb-3">
         <div class="form-group">
           <input class="form-control"
                  v-model="newMessage.title"
@@ -21,8 +21,20 @@
         <button class="btn btn-primary" type="submit">Send</button>
       </form>
       <div class="card-columns">
-        <div class="card" v-for="message in reverse(messages)" :key="message.id">
-          <div class="card-block">
+        <div class="card border-success">
+          <div class="card-body">
+            <h5 class="card-title">Hello!</h5>
+            <p class="card-text text-success">This is our fixed card!</p>
+            <p class="card-text">
+              <small class="text-muted">
+                {{ dateToString(Date.now()) }}
+              </small>
+            </p>
+          </div>
+        </div>
+        <!-- <div class="card" v-for="message in reverse(messages)" :key="message.id">-->
+        <div class="card" v-for="(message, index) in reversedMessages" :key="index">
+          <div class="card-body">
             <h5 class="card-title">{{ message.title }}</h5>
             <p class="card-text">{{ message.text }}</p>
             <p class="card-text">
@@ -39,7 +51,7 @@
 
 <script>
 import Firebase from 'firebase'
-import { dateToString, reverse } from './utils/utils'
+import { dateToString } from './utils/utils'
 
 let config = {
   apiKey: process.env.API_KEY,
@@ -67,9 +79,13 @@ export default {
   firebase: {
     messages: messagesRef
   },
+  computed: {
+    reversedMessages: function () {
+      return this.messages.slice().reverse()
+    }
+  },
   methods: {
     dateToString: dateToString,
-    reverse: reverse,
     addMessage (e) {
       e.preventDefault()
       if (this.newMessage.title === '') {

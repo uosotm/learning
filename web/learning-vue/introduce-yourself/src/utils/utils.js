@@ -7,11 +7,6 @@ function dateToString (date) {
   return ''
 }
 
-function reverse (messages) {
-  return messages.reverse()
-}
-
 export {
-  dateToString,
-  reverse
+  dateToString
 }
