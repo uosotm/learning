@@ -21,7 +21,7 @@
         <button class="btn btn-primary" type="submit">Send</button>
       </form>
       <div class="card-columns">
-        <div class="card" v-for="message in messages" :key="message.id">
+        <div class="card" v-for="message in reverse(messages)" :key="message.id">
           <div class="card-block">
             <h5 class="card-title">{{ message.title }}</h5>
             <p class="card-text">{{ message.text }}</p>
@@ -39,7 +39,7 @@
 
 <script>
 import Firebase from 'firebase'
-import { dateToString } from './utils/utils'
+import { dateToString, reverse } from './utils/utils'
 
 let config = {
   apiKey: process.env.API_KEY,
@@ -69,6 +69,7 @@ export default {
   },
   methods: {
     dateToString: dateToString,
+    reverse: reverse,
     addMessage (e) {
       e.preventDefault()
       if (this.newMessage.title === '') {
