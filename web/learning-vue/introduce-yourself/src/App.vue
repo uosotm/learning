@@ -26,7 +26,9 @@
             <h5 class="card-title">{{ message.title }}</h5>
             <p class="card-text">{{ message.text }}</p>
             <p class="card-text">
-              <small class="text-muted">{{ message.timestamp }}</small>
+              <small class="text-muted">
+                {{ dateToString(message.timestamp) }}
+              </small>
             </p>
           </div>
         </div>
@@ -37,6 +39,7 @@
 
 <script>
 import Firebase from 'firebase'
+import { dateToString } from './utils/utils'
 
 let config = {
   apiKey: process.env.API_KEY,
@@ -65,6 +68,7 @@ export default {
     messages: messagesRef
   },
   methods: {
+    dateToString: dateToString,
     addMessage (e) {
       e.preventDefault()
       if (this.newMessage.title === '') {
