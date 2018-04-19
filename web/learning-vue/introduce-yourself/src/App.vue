@@ -21,35 +21,22 @@
         <button class="btn btn-primary" type="submit">Send</button>
       </form>
       <div class="card-columns">
-        <div class="card border-success">
-          <div class="card-body">
-            <h5 class="card-title">Hello!</h5>
-            <p class="card-text text-success">This is our fixed card!</p>
-            <p class="card-text">
-              <small class="text-muted">
-                {{ dateToString(Date.now()) }}
-              </small>
-            </p>
-          </div>
-        </div>
-        <!-- <div class="card" v-for="message in reverse(messages)" :key="message.id">-->
-        <div class="card" v-for="(message, index) in reversedMessages" :key="index">
-          <div class="card-body">
-            <h5 class="card-title">{{ message.title }}</h5>
-            <p class="card-text">{{ message.text }}</p>
-            <p class="card-text">
-              <small class="text-muted">
-                {{ dateToString(message.timestamp) }}
-              </small>
-            </p>
-          </div>
-        </div>
+        <card class="border-success"
+              :title="'Hello!'"
+              :text="'This is our fixed card!'"
+              :footer="'Added on ' + dateToString(Date.now())"></card>
+        <card v-for="(message, index) in messages"
+              :key="index"
+              :title="message.title"
+              :text="message.text"
+              :footer="'Added on ' + dateToString(message.timestamp)"></card>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import Card from './components/Card'
 import Firebase from 'firebase'
 import { dateToString } from './utils/utils'
 
@@ -97,6 +84,9 @@ export default {
       this.newMessage.title = ''
       this.newMessage.timestamp = null
     }
+  },
+  components: {
+    Card
   }
 }
 </script>
